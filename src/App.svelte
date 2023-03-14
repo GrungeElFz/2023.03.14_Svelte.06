@@ -2,6 +2,8 @@
 	import ToDoList from './lib/ToDoList.svelte';
 	import { v4 as uuid } from 'uuid';
 	import { onMount, tick } from 'svelte';
+  import { blur, slide } from 'svelte/transition';
+  import { cubicInOut } from 'svelte/easing';
 
 	let toDoListBox;
 	let showList = true;
@@ -113,7 +115,11 @@
 </label>
 
 {#if showList}
-	<div style:max-width="20rem">
+	<div 
+		in:slide={{duration: 300, easing: cubicInOut}}
+		out:blur ={{duration: 500, amount: 10}}
+		style:max-width="20rem"
+	>
 		<ToDoList
 			{toDoLists}
 			{error}
