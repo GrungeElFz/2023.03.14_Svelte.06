@@ -2,8 +2,8 @@
 	import ToDoList from './lib/ToDoList.svelte';
 	import { v4 as uuid } from 'uuid';
 	import { onMount, tick } from 'svelte';
-  import { blur, slide } from 'svelte/transition';
-  import { cubicInOut } from 'svelte/easing';
+	import { blur, slide } from 'svelte/transition';
+	import { cubicInOut } from 'svelte/easing';
 
 	let toDoListBox;
 	let showList = true;
@@ -109,15 +109,25 @@
 	}
 </script>
 
+{#if toDoLists}
+	{#if toDoLists.length === 0}
+		<p>No item</p>
+	{:else if toDoLists.length === 1}
+		<p>{toDoLists.length} item</p>
+	{:else if toDoLists.length > 1}
+		<p>{toDoLists.length} items</p>
+	{/if}
+{/if}
+
 <label>
 	<input type="checkbox" bind:checked={showList} />
 	Show/Hide Tasks
 </label>
 
 {#if showList}
-	<div 
-		in:slide={{duration: 300, easing: cubicInOut}}
-		out:blur ={{duration: 500, amount: 10}}
+	<div
+		in:slide={{ duration: 300, easing: cubicInOut }}
+		out:blur={{ duration: 500, amount: 10 }}
 		style:max-width="20rem"
 	>
 		<ToDoList
