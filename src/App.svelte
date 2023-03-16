@@ -110,13 +110,15 @@
 </script>
 
 {#if toDoLists}
-	{#if toDoLists.length === 0}
-		<p>No item</p>
-	{:else if toDoLists.length === 1}
-		<p>{toDoLists.length} item</p>
-	{:else if toDoLists.length > 1}
-		<p>{toDoLists.length} items</p>
-	{/if}
+	<p>
+		{#if toDoLists.length === 0}
+			No item
+		{:else if toDoLists.length === 1}
+			{toDoLists.length} item
+		{:else if toDoLists.length > 1}
+			{toDoLists.length} items
+		{/if}
+	</p>
 {/if}
 
 <label>
