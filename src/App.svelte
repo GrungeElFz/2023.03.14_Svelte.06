@@ -114,8 +114,8 @@
 		{#if toDoLists.length === 0}
 			No item
 		{:else if toDoLists.length === 1}
-			{toDoLists.length} item
-		{:else if toDoLists.length > 1}
+			1 item
+		{:else}
 			{toDoLists.length} items
 		{/if}
 	</p>
