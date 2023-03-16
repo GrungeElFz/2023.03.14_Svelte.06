@@ -2,7 +2,7 @@
 	import ToDoList from './lib/ToDoList.svelte';
 	import { v4 as uuid } from 'uuid';
 	import { onMount, tick } from 'svelte';
-	import { blur, slide } from 'svelte/transition';
+	import { blur, fly, slide } from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
 
 	let toDoListBox;
@@ -110,15 +110,18 @@
 </script>
 
 {#if toDoLists}
-	<p>
-		{#if toDoLists.length === 0}
-			No item
-		{:else if toDoLists.length === 1}
-			1 item
-		{:else}
-			{toDoLists.length} items
-		{/if}
-	</p>
+  <p>
+    {#if toDoLists.length == 0}
+			<span style:display="inline-block" in:fly|local={{ y: -10 }}>No</span> item
+    {:else if toDoLists.length == 1}
+      <span style:display="inline-block" in:fly|local={{ y: -10 }}>1</span> item
+    {:else}
+      {#key toDoLists.length}
+        <span style:display="inline-block" in:fly|local={{ y: -10 }}>{toDoLists.length}</span>
+      {/key}
+      items
+    {/if}
+  </p>
 {/if}
 
 <label>
