@@ -126,7 +126,7 @@
 
 <label>
 	<input type="checkbox" bind:checked={showList} />
-	Show/Hide Tasks
+	{showList ? 'Hide Tasks' : 'Show Tasks'}
 </label>
 
 {#if showList}
