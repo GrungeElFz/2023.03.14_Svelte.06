@@ -21,6 +21,9 @@
 	export let disableAdding = false;
 	export let disabledItems = [];
 
+	$: done = toDoLists ? toDoLists.filter((t) => t.completed) : [];
+	$: notDone = toDoLists ? toDoLists.filter((t) => !t.completed) : [];
+
 	let prevToDoLists = toDoLists;
 	let inputText = '';
 	let input, listDiv, listDivScrollHeight, autoScroll;
@@ -81,39 +84,46 @@
 				{#if toDoLists.length === 0}
 					<p class="no-item-text">Nothing to do 🤷‍♀️</p>
 				{:else}
-					<ul>
-						{#each toDoLists as toDoList, index (toDoList.id)}
-							{@const { id, completed, title } = toDoList}
-							<li animate:flip={{ duration: 300 }}>
-								<slot {toDoList} {index} {handleToggleToDoLists}>
-									<div transition:fly class:completed>
-										<label>
-											<input
-												disabled={disabledItems.includes(id)}
-												on:input={(event) => {
-													event.currentTarget.checked = completed;
-													handleToggleToDoLists(id, !completed);
-												}}
-												type="checkbox"
-												checked={completed}
-											/>
-											<slot name="title">{title}</slot>
-										</label>
-										<button
-											disabled={disabledItems.includes(id)}
-											class="remove-todo-button"
-											aria-label="Remove toDoList: {title}"
-											on:click={() => handleRemoveToDoLists(id)}
-										>
-											<span style:width="0.5rem" style:display="inline-block">
-												<FaRegTrashAlt />
-											</span>
-										</button>
-									</div>
-								</slot>
-							</li>
+					<div style:display="flex">
+						{#each [notDone, done] as list, index}
+							<div class="list-wrapper">
+								<h3>{index === 0 ? 'ToDo' : 'Done'}</h3>
+								<ul>
+									{#each list as toDoList, index (toDoList.id)}
+										{@const { id, completed, title } = toDoList}
+										<li animate:flip={{ duration: 300 }}>
+											<slot {toDoList} {index} {handleToggleToDoLists}>
+												<div transition:fly class:completed>
+													<label>
+														<input
+															disabled={disabledItems.includes(id)}
+															on:input={(event) => {
+																event.currentTarget.checked = completed;
+																handleToggleToDoLists(id, !completed);
+															}}
+															type="checkbox"
+															checked={completed}
+														/>
+														<slot name="title">{title}</slot>
+													</label>
+													<button
+														disabled={disabledItems.includes(id)}
+														class="remove-todo-button"
+														aria-label="Remove toDoList: {title}"
+														on:click={() => handleRemoveToDoLists(id)}
+													>
+														<span style:width="0.5rem" style:display="inline-block">
+															<FaRegTrashAlt />
+														</span>
+													</button>
+												</div>
+											</slot>
+										</li>
+									{/each}
+								</ul>
+							</div>
 						{/each}
-					</ul>
+					</div>
 				{/if}
 			</div>
 		</div>
@@ -141,53 +151,60 @@
 			text-align: center;
 		}
 		.toDoList {
-			max-height: 15rem;
+			max-height: 40rem;
 			overflow: auto;
-			ul {
-				margin: 0;
+			.list-wrapper {
 				padding: 1rem;
-				list-style: none;
-				li > div {
-					margin-bottom: 0.3rem;
-					display: flex;
-					align-items: center;
-					background-color: rgb(20, 20, 20);
-					border-radius: 0.3rem;
-					padding: 0.5rem;
-					position: relative;
-					label {
-						cursor: pointer;
+				flex: 1;
+				h3 {
+					margin: 0 0 0.5rem;
+				}
+				ul {
+					margin: 0;
+					padding: 0rem;
+					list-style: none;
+					li > div {
+						margin-bottom: 0.3rem;
 						display: flex;
-						align-items: baseline;
-						padding-right: 1rem;
-						input[type='checkbox'] {
+						align-items: center;
+						background-color: rgb(20, 20, 20);
+						border-radius: 0.3rem;
+						padding: 0.5rem;
+						position: relative;
+						label {
 							cursor: pointer;
-							margin: 0 0.4rem 0 0;
+							display: flex;
+							align-items: baseline;
+							padding-right: 1rem;
+							input[type='checkbox'] {
+								cursor: pointer;
+								margin: 0 0.4rem 0 0;
+							}
 						}
-					}
-					&.completed > label {
-						opacity: 0.5;
-						text-decoration: line-through;
-					}
-					.remove-todo-button {
-						display: none;
-						border: none;
-						background: none;
-						padding: 0.3rem;
-						position: absolute;
-						right: 0.3rem;
-						cursor: pointer;
-						&:disabled {
+						&.completed > label {
 							opacity: 0.5;
-							cursor: not-allowed;
+							text-decoration: line-through;
 						}
-						:global(svg) {
-							fill: rgb(100, 100, 100);
-						}
-					}
-					&:hover {
 						.remove-todo-button {
-							display: block;
+							display: none;
+							border: none;
+							background: none;
+							padding: 0.3rem;
+							position: absolute;
+							right: 0.3rem;
+							cursor: pointer;
+							&:disabled {
+								opacity: 0.5;
+								cursor: not-allowed;
+							}
+							:global(svg) {
+								fill: rgb(100, 100, 100);
+							}
+						}
+						&:hover {
+							.remove-todo-button {
+								display: block;
+							}
 						}
 					}
 				}

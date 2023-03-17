@@ -133,7 +133,7 @@
 	<div
 		in:slide={{ duration: 300, easing: cubicInOut }}
 		out:blur={{ duration: 500, amount: 10 }}
-		style:max-width="20rem"
+		style:max-width="45rem"
 	>
 		<ToDoList
 			{toDoLists}
