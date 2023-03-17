@@ -3,6 +3,8 @@
 <script>
 	import Button from './Button.svelte';
 	import { createEventDispatcher, afterUpdate } from 'svelte';
+	import { fly } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
 	import FaRegTrashAlt from 'svelte-icons/fa/FaRegTrashAlt.svelte';
 
 	afterUpdate(() => {
@@ -82,9 +84,9 @@
 					<ul>
 						{#each toDoLists as toDoList, index (toDoList.id)}
 							{@const { id, completed, title } = toDoList}
-							<li>
+							<li animate:flip={{ duration: 300 }}>
 								<slot {toDoList} {index} {handleToggleToDoLists}>
-									<div class:completed>
+									<div transition:fly class:completed>
 										<label>
 											<input
 												disabled={disabledItems.includes(id)}
