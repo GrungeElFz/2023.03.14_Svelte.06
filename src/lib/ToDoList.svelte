@@ -3,7 +3,7 @@
 <script>
 	import Button from './Button.svelte';
 	import { createEventDispatcher, afterUpdate } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import { fly, crossfade, scale } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import FaRegTrashAlt from 'svelte-icons/fa/FaRegTrashAlt.svelte';
 
@@ -13,6 +13,13 @@
 		}
 
 		autoScroll = false;
+	});
+
+	const [send, receive] = crossfade({
+		duration: 400,
+		fallback(node) {
+			return scale(node, { start: 0.5, duration: 300 })
+		}
 	});
 
 	export let toDoLists = null;
@@ -93,7 +100,7 @@
 										{@const { id, completed, title } = toDoList}
 										<li animate:flip={{ duration: 300 }}>
 											<slot {toDoList} {index} {handleToggleToDoLists}>
-												<div transition:fly class:completed>
+												<div in:receive|local={{ key: id }} out:send|local={{ key: id }} class:completed>
 													<label>
 														<input
 															disabled={disabledItems.includes(id)}
